@@ -79,9 +79,24 @@ class _PropertyAllDetailsState extends State<PropertyAllDetails> {
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) async {
       await getController.getApi(widget.slug, widget.id);
 
-      print(getController.PropertyData!.result!.propertyName!);
-      print(getController.PropertyData!.result!.accuracyAvgRating!);
-      print(getController.PropertyData!.result!.locationAvgRating!);
+      // Check if PropertyData is loaded before accessing it
+      if (getController.PropertyData == null ||
+          getController.PropertyData!.result == null) {
+        print("PropertyData is null, cannot proceed");
+        return;
+      }
+
+      print(
+        getController.PropertyData!.result!.propertyName ?? 'No property name',
+      );
+      print(
+        getController.PropertyData!.result!.accuracyAvgRating ??
+            'No accuracy rating',
+      );
+      print(
+        getController.PropertyData!.result!.locationAvgRating ??
+            'No location rating',
+      );
       print("as.startDate!");
 
       print(as.startDate!.value.toString());
@@ -89,11 +104,11 @@ class _PropertyAllDetailsState extends State<PropertyAllDetails> {
       print(widget.startDate);
       print(widget.endDate);
 
-      int guestLimit = int.parse(
-        getController.PropertyData!.result!.guest.toString(),
-      );
-      int adults = int.parse(as.totalAdults.text.toString());
-      int children = int.parse(as.totalChildren.text.toString());
+      int guestLimit =
+          int.tryParse(getController.PropertyData!.result!.guest.toString()) ??
+          1;
+      int adults = int.tryParse(as.totalAdults.text.toString()) ?? 1;
+      int children = int.tryParse(as.totalChildren.text.toString()) ?? 0;
 
       if (widget.fromSearch) {
         if (widget.startDate != "") {
@@ -130,36 +145,65 @@ class _PropertyAllDetailsState extends State<PropertyAllDetails> {
         as.totalInphant.text = '0';
       }
 
-      totalReviews = int.parse(
-        getController.PropertyData!.result!.reviewsCount!.toString(),
-      );
-      overallRating = getController.PropertyData!.result!.avgRating!.toString();
-      if (getController.PropertyData!.reviewsFromGuests.length != 0) {
+      totalReviews =
+          int.tryParse(
+            getController.PropertyData!.result!.reviewsCount?.toString() ?? '0',
+          ) ??
+          0;
+      overallRating =
+          getController.PropertyData!.result!.avgRating?.toString() ?? '0.0';
+      if (getController.PropertyData!.reviewsFromGuests != null &&
+          getController.PropertyData!.reviewsFromGuests!.isNotEmpty) {
         ratings = {
-          "Hygiene standards": double.parse(
-            getController.PropertyData!.result!.cleanlinessAvgRating.toString(),
-          ),
-          "Responsiveness of Host": double.parse(
-            getController.PropertyData!.result!.propertyCommunicationAvgRating
-                .toString(),
-          ),
-          "Photos to Reality": double.parse(
-            getController.PropertyData!.result!.accuracyAvgRating.toString(),
-          ),
-          "Neighbourhood & Surroundings": double.parse(
-            getController.PropertyData!.result!.locationAvgRating.toString(),
-          ),
-          "Value for Money": double.parse(
-            getController.PropertyData!.result!.valueAvgRating.toString(),
-          ),
-          "Overall Experience": double.parse(
-            getController.PropertyData!.result!.propertyExperienceAvgRating
-                .toString(),
-          ),
+          "Hygiene standards":
+              double.tryParse(
+                getController.PropertyData!.result!.cleanlinessAvgRating
+                        ?.toString() ??
+                    '0',
+              ) ??
+              0.0,
+          "Responsiveness of Host":
+              double.tryParse(
+                getController
+                        .PropertyData!
+                        .result!
+                        .propertyCommunicationAvgRating
+                        ?.toString() ??
+                    '0',
+              ) ??
+              0.0,
+          "Photos to Reality":
+              double.tryParse(
+                getController.PropertyData!.result!.accuracyAvgRating
+                        ?.toString() ??
+                    '0',
+              ) ??
+              0.0,
+          "Neighbourhood & Surroundings":
+              double.tryParse(
+                getController.PropertyData!.result!.locationAvgRating
+                        ?.toString() ??
+                    '0',
+              ) ??
+              0.0,
+          "Value for Money":
+              double.tryParse(
+                getController.PropertyData!.result!.valueAvgRating
+                        ?.toString() ??
+                    '0',
+              ) ??
+              0.0,
+          "Overall Experience":
+              double.tryParse(
+                getController.PropertyData!.result!.propertyExperienceAvgRating
+                        ?.toString() ??
+                    '0',
+              ) ??
+              0.0,
         };
       }
       getController.priceUpdate();
-      print(getController.PropertyData!.result!.avgRating!);
+      print(getController.PropertyData!.result!.avgRating ?? 'No avg rating');
     });
 
     if (!widget.fromSearch) {
