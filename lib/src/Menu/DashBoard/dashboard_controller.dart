@@ -8,14 +8,12 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:location/location.dart';
 import 'package:permission_handler/permission_handler.dart';
-import 'package:geolocator/geolocator.dart';
 import 'package:gleekeyu/src/Auth/Login/userLogin_controller.dart';
 import 'package:gleekeyu/src/Menu/DashBoard/dashBoard_model.dart';
 import 'package:gleekeyu/utils/baseconstant.dart';
 import 'inquiry_model.dart';
 
 class DashBoardController extends GetxController {
-
   UserLoginController getController = Get.find();
   double currDotValue = 0;
   double? currLatitude;
@@ -39,7 +37,7 @@ class DashBoardController extends GetxController {
   var isDataLoaded = false;
 
   final carousel_slider.CarouselSliderController carouselController =
-  carousel_slider.CarouselSliderController();
+      carousel_slider.CarouselSliderController();
 
   void setPageIndex(int index) {
     currentIndex.value = index;
@@ -79,21 +77,25 @@ class DashBoardController extends GetxController {
           getLocation();
           return;
         } else {
+          // User denied permission, use default coordinates
           currLongitude = 72.8160;
           currLatitude = 21.1637618;
         }
       } else if (status.isPermanentlyDenied) {
+        // Don't force open settings on app startup
+        // Use default coordinates instead
         currLongitude = 72.8160;
         currLatitude = 21.1637618;
-        await Geolocator.openLocationSettings();
-        await getLocation();
+        print(
+          "Location permission permanently denied. Using default coordinates.",
+        );
       }
     } else {
+      // Location service is disabled, use default coordinates
       currLongitude = 72.8160;
       currLatitude = 21.1637618;
       isDataLoaded = true;
-      await Geolocator.openLocationSettings();
-      await getLocation();
+      print("Location service is disabled. Using default coordinates.");
     }
     await getInqApi();
     await getApi();
@@ -103,9 +105,9 @@ class DashBoardController extends GetxController {
   Future<void> getApi() async {
     Map<String, dynamic> params = {
       //'curr_lat': "21.1652",
-     // 'curr_lng': "72.7799"
+      // 'curr_lng': "72.7799"
       'curr_lat': currLatitude.toString(),
-      'curr_lng': currLongitude.toString()
+      'curr_lng': currLongitude.toString(),
     };
     d.Dio dio = d.Dio();
     d.Response response = await dio.post(
@@ -117,7 +119,6 @@ class DashBoardController extends GetxController {
     print(params);
 
     if (response.statusCode == 200) {
-
       log(response.data.toString());
       dashBoard_model = DashBoard_model.fromJson(response.data);
 
@@ -128,7 +129,8 @@ class DashBoardController extends GetxController {
 
       propertyType = dashBoard_model!.data!.propertyType ?? [];
       properties = dashBoard_model!.data!.properties ?? [];
-      gleekeyChoiceProperty = dashBoard_model!.data!.gleekeyChoiceProperty ?? [];
+      gleekeyChoiceProperty =
+          dashBoard_model!.data!.gleekeyChoiceProperty ?? [];
       bestSellerProperties = dashBoard_model!.data!.bestSellerProperty ?? [];
       popularProperties = dashBoard_model!.data!.populerProperties ?? [];
       testimonials = dashBoard_model!.data!.testimonials ?? [];
@@ -141,24 +143,28 @@ class DashBoardController extends GetxController {
   }
 
   Future<void> getInqApi() async {
-    if(currUser==null)return;
+    if (currUser == null) return;
     http.Response response = await http.get(
-      Uri.parse(BaseConstant.BASE_URL + EndPoint.getInquiry ),
+      Uri.parse(BaseConstant.BASE_URL + EndPoint.getInquiry),
 
       headers: {
-        'Authorization': 'Bearer ${currUser!=null?currUser?.accessToken:""}',
+        'Authorization':
+            'Bearer ${currUser != null ? currUser?.accessToken : ""}',
       },
     );
-    log("got the data -- > slug: ${BaseConstant.BASE_URL + EndPoint.getInquiry}");
+    log(
+      "got the data -- > slug: ${BaseConstant.BASE_URL + EndPoint.getInquiry}",
+    );
     log("got the data -- > slug: ${response.body}");
     if (response.statusCode == 200) {
       var result = json.decode(response.body);
       inquiryModel = InquiryModel.fromJson(result);
-     // print("Date Price : ${inquiryModel!.inquiryModelData!.dateTime!}");
+      // print("Date Price : ${inquiryModel!.inquiryModelData!.dateTime!}");
       isDataLoaded = true;
 
-
-      log("got the data -- > slug: ${BaseConstant.BASE_URL + EndPoint.getInquiry}");
+      log(
+        "got the data -- > slug: ${BaseConstant.BASE_URL + EndPoint.getInquiry}",
+      );
       log("got the data -- > slug: ${result}");
     } else {
       printError(
@@ -168,22 +174,9 @@ class DashBoardController extends GetxController {
     update();
   }
 
-
-
-
-
-
-
-
-
-
-
-
   @override
   void onClose() {
     log("Dashboard closed");
     super.onClose();
   }
 }
-
-
