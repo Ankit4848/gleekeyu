@@ -1,0 +1,68 @@
+{
+  "project_info": {
+    "project_number": "162431298633",
+    "project_id": "gleekey-412411",
+    "storage_bucket": "gleekey-412411.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:162431298633:android:3b785dfb2b88c5c753e398",
+        "android_client_info": {
+          "package_name": "com.softieons.gleekeyu"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "162431298633-112uiaaitnjto89j4rfb8e8oallb7lbp.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyA_IS0P46bonqYDhkENosMgGG8gOv1leDw"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "162431298633-112uiaaitnjto89j4rfb8e8oallb7lbp.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:162431298633:android:595cb4a18bd45b6d53e398",
+        "android_client_info": {
+          "package_name": "com.softieons.gleekyhost"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "162431298633-112uiaaitnjto89j4rfb8e8oallb7lbp.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyA_IS0P46bonqYDhkENosMgGG8gOv1leDw"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "162431298633-112uiaaitnjto89j4rfb8e8oallb7lbp.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
