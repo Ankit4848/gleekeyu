@@ -95,17 +95,42 @@ void main() async {
   SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
   try {
     FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
-    await Firebase.initializeApp();
-    print("FCM TOKEN:::: ${await FirebaseMessaging.instance.getToken()}");
-    await PushNotificationService().setupInteractedMessage();
-  } catch (e) {}
+    await Firebase.initializeApp().timeout(
+      const Duration(seconds: 10),
+      onTimeout: () {
+        print("Firebase initialization timed out");
+        throw Exception("Firebase initialization timeout");
+      },
+    );
+    print("Firebase initialized successfully");
 
-  await FirebaseMessaging.instance.getInitialMessage().then((message) {
-    if (message != null) {
-      // 🔥 App close hoy tyare aavi notification thi su open karvu te decide karo
-      PushNotificationService.setUpInterractedMassage2(message);
-    }
-  });
+    final token = await FirebaseMessaging.instance.getToken().timeout(
+      const Duration(seconds: 5),
+      onTimeout: () {
+        print("FCM token retrieval timed out");
+        return null;
+      },
+    );
+    print("FCM TOKEN:::: $token");
+
+    await PushNotificationService().setupInteractedMessage();
+  } catch (e) {
+    print("Firebase initialization error: $e");
+  }
+
+  try {
+    await FirebaseMessaging.instance
+        .getInitialMessage()
+        .timeout(const Duration(seconds: 5), onTimeout: () => null)
+        .then((message) {
+          if (message != null) {
+            // 🔥 App close hoy tyare aavi notification thi su open karvu te decide karo
+            PushNotificationService.setUpInterractedMassage2(message);
+          }
+        });
+  } catch (e) {
+    print("Error getting initial message: $e");
+  }
 
   await Hive.initFlutter();
   await Hive.openBox('gleekey');
