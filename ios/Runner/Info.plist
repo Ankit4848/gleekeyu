@@ -54,5 +54,11 @@
 			</array>
 		</dict>
 	</array>
+	<key>NSLocationWhenInUseUsageDescription</key>
+	<string>Gleekey : Farms & Villas needs your location to show nearby properties and help you find accommodations in your area.</string>
+	<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
+	<string>Gleekey : Farms & Villas needs your location to show nearby properties and provide personalized recommendations based on your current location.</string>
+	<key>NSLocationAlwaysUsageDescription</key>
+	<string>Gleekey : Farms & Villas needs your location to show nearby properties and provide personalized recommendations based on your current location.</string>
 </dict>
 </plist>
