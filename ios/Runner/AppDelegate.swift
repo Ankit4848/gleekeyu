@@ -1,6 +1,7 @@
 import Flutter
+import FirebaseCore
 import UIKit
-
+import GoogleMaps
 @main
 @objc class AppDelegate: FlutterAppDelegate {
 
@@ -11,6 +12,9 @@ import UIKit
     _ application: UIApplication,
     didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?
   ) -> Bool {
+  FirebaseApp.configure()
+      GeneratedPluginRegistrant.register(with: self)
+        GMSServices.provideAPIKey("AIzaSyDmrLzP5frPHCyYPbTM6Kdyu9STHcWl4as")
     let controller = window?.rootViewController as! FlutterViewController
     deepLinkChannel = FlutterMethodChannel(name: channelName, binaryMessenger: controller.binaryMessenger)
 
